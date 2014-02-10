@@ -7,3 +7,8 @@ WARNING: Although this repository contains a version of steamvr.h you should
 not ship compiled against that version of the interface. Backward 
 compatability is only guaranteed against versions of steamvr.h that have 
 shipped in a Steamworks SDK release.
+
+To build the code open a command prompt to the src directory and run
+"devtools\bin\vpc +everything /mksln steamvr". That will create steamvr.sln
+that you can open in Visual Studio 2010 to build the whole runtime. Run the
+same command on Linux or OSX to build the projects for those platforms.
