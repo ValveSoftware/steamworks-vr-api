@@ -1,0 +1,42 @@
+//========= Copyright Valve Corporation ============//
+//-----------------------------------------------------------------------------
+//	vrclient.VPC
+//
+//	Project Script for the core vrclient.dll
+//-----------------------------------------------------------------------------
+$macro SRCDIR		".."
+$Macro OUTBINDIR	"$BINPUBLIC"
+$macro OUTBINNAME	"vrclient"
+$macro OUTBINNAME	"vrclient_x64" [$WIN64]
+
+$Macro GENERATED_PROTO_DIR	"$SRCDIR\vrclient\generated_proto"
+$Macro GENERATED_PROTO_DIR	"$SRCDIR\vrclient\generated_proto_x64" [$WIN64]
+
+$include "$SRCDIR\vpc_scripts\source_dll_base.vpc"
+$include "$SRCDIR\common\common.vpc"
+
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;$HDRPUBLIC"
+	}
+}	
+
+
+$Project "vrclient"
+{
+	$Folder "Source Files"
+	{
+		$File "hmdlatest.cpp"
+		$File "hmdlatest.h"
+		$File "interface_adapters.cpp"
+		$File "interface_adapters.h"
+		$File "notifications.cpp"
+		$File "notifications.h"
+		$File "vrsystem.cpp"
+		$File "vrclient.cpp"
+		$File "vrclient.h"
+	}
+}

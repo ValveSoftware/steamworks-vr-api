@@ -1,0 +1,49 @@
+//========= Copyright Valve Corporation ============//
+//-----------------------------------------------------------------------------
+//	SOURCE_EXE_posix.VPC
+//
+//	Base Settings for Source(TM) Projects
+//-----------------------------------------------------------------------------
+
+$Include "$SRCDIR\vpc_scripts\version.vpc"
+
+$MacroRequired				"SRCDIR"
+$MacroRequired				"OUTBINNAME"	"$PROJECTNAME"
+$MacroRequired				"OUTBINDIR"	"$SRCDIR/../game"
+$Macro IS_LIB_PROJECT		"1"
+$Include "$SRCDIR\vpc_scripts\source_posix_base.vpc"
+
+$Include "$SRCDIR\vpc_scripts\loadaddress.vpc"
+
+
+$IgnoreRedundancyWarning	"ON"
+
+$Configuration
+{
+	$General
+	{
+		$ConfigurationType				"Application (.exe)"
+	}
+
+	$Compiler
+	{
+		$PreprocessorDefinitions		"$BASE;EXENAME=$OUTBINNAME"
+	}
+
+	$Linker
+	{
+		$OutputFile						"$OUTBINDIR/$OUTBINNAME"
+
+		$GCC_ExtraLinkerFlags			"-Wl,--no-as-needed -ltcmalloc_minimal -Wl,--as-needed" [$LINUXALL&&!$DEDICATED]
+	}
+}
+
+$Project
+{
+	$Folder "Resources"
+	{
+		$File	"$ROOTSCRIPT"
+	}
+
+}
+

@@ -1,0 +1,42 @@
+//========= Copyright Valve Corporation ============//
+//	vrserver.VPC
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		".."
+$Macro OUTBINDIR	"$BINPUBLIC"
+$Macro GENERATED_PROTO_DIR	"$SRCDIR\vrserver\generated_proto"
+
+$Macro OUTBINNAME		"vrserver" [$WINDOWS]
+$Macro OUTBINNAME       "vrserver_osx"   [$OSXALL]
+$Macro OUTBINNAME       "vrserver_linux" [$LINUX]
+
+$Include "$SRCDIR\vpc_scripts\source_exe_con_base.vpc"
+$Include "$SRCDIR\common\common.vpc"
+
+$Configuration
+{
+	$General [$POSIX]
+	{
+		$GameOutputFile	 "$BINPUBLIC/$OUTBINNAME"
+	}
+
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;$HDRPUBLIC"
+	}
+
+
+}
+
+
+$Project "vrserver"
+{
+	$Folder	"Source Files"
+	{
+		$File	"vrserver.cpp"
+	}
+
+}
+

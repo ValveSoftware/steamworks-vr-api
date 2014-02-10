@@ -1,0 +1,55 @@
+//========= Copyright Valve Corporation ============//
+//-----------------------------------------------------------------------------
+//	vrcmd.VPC
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		".."
+$Macro OUTBINDIR	"$BINPUBLIC"
+
+$Macro OUTBINNAME		"vrcmd" [$WIN32]
+$Macro OUTBINNAME		"vrcmd_x64" [$WIN64]
+$Macro OUTBINNAME       "vrcmd_osx"   [$OSXALL]
+$Macro OUTBINNAME       "vrcmd_linux" [$LINUX]
+
+$Macro GENERATED_PROTO_DIR "$SRCDIR\vrcmd\generated_proto"
+
+$Include "$SRCDIR\vpc_scripts\source_exe_con_base.vpc"
+$Include "$SRCDIR\common\common.vpc"
+
+$Configuration
+{
+	$General [$POSIX]
+	{
+		$GameOutputFile	 "$BINPUBLIC/$OUTBINNAME"
+	}
+
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;$HDRPUBLIC"
+	}
+
+	$General
+	{
+		$AdditionalProjectDependencies	"$BASE;vrtest_api" 
+	}
+
+}
+
+
+$Project "vrcmd"
+{
+	$Folder	"Source Files"
+	{
+		$File	"vrcmd.cpp"
+	}
+
+	$folder	"Link Libraries"
+	{
+		$ImpLib "$LIBPUBLIC\vrtest_api" [$WIN32]
+		$ImpLib "$LIBPUBLIC\vrtest_api_x64" [$WIN64]
+		$ImpLib vrtest_api [$OSXALL || $LINUX]
+	}
+}
+

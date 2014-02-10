@@ -1,0 +1,17 @@
+//========= Copyright Valve Corporation ============//
+// -----------------------------------------------------------------
+// A handy VPC script that includes the header files from public in 
+// a project
+// -----------------------------------------------------------------
+
+$Project
+{
+	$Folder "Public Header Files"
+	{
+		$File "$HDRPUBLIC\steamvr.h"
+		$File "$HDRPUBLIC\vr_controlpanel.h"
+
+		$File "$HDRPUBLIC\ihmddriver.h"
+		$File "$HDRPUBLIC\ihmddriverprovider.h"
+	}
+}

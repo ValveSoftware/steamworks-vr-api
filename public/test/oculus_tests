@@ -1,0 +1,20 @@
+#!/bin/bash
+
+OS=`uname`
+
+case $OS in
+"Darwin")
+	BINNAME=oculus_tests_osx
+	export DYLD_LIBRARY_PATH=$PWD:$DYLD_LIBRARY_PATH
+	;;
+"Linux")
+	BINNAME=oculus_tests_linux
+	export LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH
+	;;
+*)
+	echo "Can't find right OpenVR_Test binary, fix the script."
+	exit -1
+	;;
+esac
+
+./$BINNAME

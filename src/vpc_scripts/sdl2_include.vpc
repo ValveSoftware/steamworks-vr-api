@@ -1,0 +1,27 @@
+//========= Copyright Valve Corporation ============//
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;$SRCDIR\thirdparty\SDL2;"
+	}
+
+	$Linker
+	{
+		// static SDL requires a bunch of system libs on Windows. Turn this back on when we have static SDL
+		$AdditionalDependencies		"$BASE winmm.lib oleaut32.lib version.lib imm32.lib" [$WIN32||$WIN64]
+		$SystemFrameworks               "$BASE;Foundation;ForceFeedback;ApplicationServices;AppKit;IOKit;AudioUnit;Carbon;CoreAudio"
+		$SystemLibraries		"$BASE;rt" [$LINUX]
+	}
+}
+
+// include the static SDL library itself
+$Project
+{
+	$Folder "Link Libraries"
+	{
+		$Lib	"$LIBCOMMON\SDL2_static" [$WINDOWS]
+		$Lib	"$LIBCOMMON\libSDL2_static" [$POSIX]
+	}
+}

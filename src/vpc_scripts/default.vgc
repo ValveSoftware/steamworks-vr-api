@@ -1,0 +1,21 @@
+//-----------------------------------------------------------------------------
+//	DEFAULT.VGC
+//
+//	Configurations for all OpenVR Projects
+//-----------------------------------------------------------------------------
+
+////////////////
+// Game Names //
+////////////////
+
+$Games
+{
+	//"None"
+}
+
+// Makes the VPC scripts work when syncing from Github
+$Conditional "SOURCESDK" "1"
+
+$Include "vpc_scripts\projects.vgc"
+$Include "vpc_scripts\groups.vgc"
+

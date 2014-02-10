@@ -1,0 +1,44 @@
+//========= Copyright Valve Corporation ============//
+//-----------------------------------------------------------------------------
+//	source_base.VPC
+//
+//  This is the base VPC file that is included by all others, on all platforms.
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$macro ADDITIONALDEPENDENCIES   " "  [!$VS2010]
+$macro ADDITIONALDEPENDENCIES   "%(AdditionalDependencies)" [$VS2010]
+
+$Macro BINPUBLIC		"$SRCDIR\..\public\runtime\bin"
+$Macro DRIVERPUBLIC		"$SRCDIR\..\public\runtime\drivers"
+$Macro TESTPUBLIC		"$SRCDIR\..\public\test"
+$Macro LIBPUBLIC		"$SRCDIR\..\public\lib$PLATSUBDIR"
+$Macro LIBCOMMON		"$SRCDIR\lib\$PLATSUBDIR"
+$Macro HDRPUBLIC		"$SRCDIR\..\public\headers"
+
+$Configuration "Debug"
+{
+	$Compiler
+	{
+		// Pass on appropriate branch define to preprocessor
+		$PreprocessorDefinitions		"VPC"
+		$PreprocessorDefinitions		"$BASE;RAD_TELEMETRY_DISABLED" [$SOURCESDK]
+// Need to revisit the code to make things run with the _RETAIL preprocessor definition
+// This line was added in the previous check-in, but had previously not been defined in this branch
+//		$PreprocessorDefinitions		"$BASE;_RETAIL"		[$RETAIL]
+	}
+}
+
+$Configuration "Release"
+{
+	$Compiler
+	{
+		// Pass on appropriate branch define to preprocessor
+		$PreprocessorDefinitions		"VPC"
+		$PreprocessorDefinitions		"$BASE;RAD_TELEMETRY_DISABLED" [$SOURCESDK]
+// Need to revisit the code to make things run with the _RETAIL preprocessor definition
+// This line was added in the previous check-in, but had previously not been defined in this branch
+//		$PreprocessorDefinitions		"$BASE;_RETAIL"		[$RETAIL]
+	}
+}

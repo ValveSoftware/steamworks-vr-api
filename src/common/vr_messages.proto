@@ -1,0 +1,123 @@
+//====== Copyright, Valve Corporation, All rights reserved. =======
+//
+// Purpose: The file defines our Google Protocol Buffers which are used in IPC
+// messages the vrserver process and the apps that use the VR API
+//
+//=============================================================================
+
+// We care more about speed than code size
+option optimize_for = SPEED;
+
+// We don't use the service generation functionality
+option cc_generic_services = false;
+
+
+// 
+// STYLE NOTES:
+//
+// Use CamelCase CMsgMyMessageName style names for messages.
+// 
+// Use lowercase _ delimited names like my_steam_id for field names, this is non-standard for Steam,
+// but plays nice with the Google formatted code generation.  
+// 
+// Try not to use required fields ever. Only do so if you are really really sure you'll never want them removed. 
+// Optional should be preffered as it will make versioning easier and cleaner in the future if someone refactors
+// your message and wants to remove or rename fields.
+//
+// Use fixed64 for JobId_t, GID_t, or SteamID.  This is appropriate for any field that is normally
+// going to be larger than 2^56.  Otherwise use int64 for 64 bit values that are frequently smaller
+// than 2^56 as it will safe space on the wire in those cases.
+//
+// Similar to fixed64, use fixed32 for RTime32 or other 32 bit values that are frequently larger than
+// 2^28.  It will safe space in those cases, otherwise use int32 which will safe space for smaller values.
+// An exception to this rule for RTime32 is if the value will frequently be zero rather than set to an actual 
+// time.
+//
+ 
+
+
+
+//
+// VRMsg_Connect
+//
+message CVRMsg_Connect
+{
+	optional	string		hmd_interface_version = 1;		// version string for the IHmd interface used by this process
+	optional	uint32		pid = 2;						// pid of the client process
+};
+
+//
+// VRMsg_ConnectResponse
+//
+message CVRMsg_ConnectResponse
+{
+	optional	int32		result = 1;						// an HmdError
+};
+
+//
+// VRMsg_ComputeDistortion
+//
+message CVRMsg_ComputeDistortion
+{
+	optional	uint32		eye = 1;						// 0 == left, 1 == right
+	optional	float		u = 2;							// input U
+	optional	float		v = 3;							// input V
+};
+
+//
+// VRMsg_ComputeDistortionResponse
+//
+message CVRMsg_ComputeDistortionResponse
+{
+	optional	float		red_u = 1;						// output red U
+	optional	float		red_v = 2;						// output red V
+	optional	float		green_u = 3;					// output green U
+	optional	float		green_v = 4;					// output green V
+	optional	float		blue_u = 5;						// output blue U
+	optional	float		blue_v = 6;						// output blue V
+};
+
+//
+// VRMsg_GetDriverInfo
+//
+message CVRMsg_GetDriverInfo
+{
+};
+
+//
+// VRMsg_GetDriverInfoResponse
+//
+message CVRMsg_GetDriverInfoResponse
+{
+	message DriverInfo
+	{
+		optional string driver_id = 1;						// internal ID of the driver
+	}
+
+	repeated DriverInfo driver = 1;
+};
+
+
+//
+// VRMsg_GetDisplayInfo
+//
+message CVRMsg_GetDisplayInfo
+{
+	optional string driver_id = 1;							// ID of the driver to fetch displays for
+};
+
+//
+// VRMsg_GetDisplayInfoResponse
+//
+message CVRMsg_GetDisplayInfoResponse
+{
+	message DisplayInfo
+	{
+		optional string display_id = 1;						// internal ID of the display
+		optional string model_number = 2;					// model number of the display
+		optional string serial_number = 3;					// serial number of the display
+	}
+
+	repeated DisplayInfo display = 1;
+};
+

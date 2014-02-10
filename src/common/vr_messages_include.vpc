@@ -1,0 +1,10 @@
+$Project
+{
+	$Folder "Protobuf Files"
+	{
+		$File "$SRCDIR\common\vr_messages.proto"
+		$DynamicFile "$GENERATED_PROTO_DIR\vr_messages.pb.h"
+		$DynamicFile "$GENERATED_PROTO_DIR\vr_messages.pb.cc"
+	}
+
+}

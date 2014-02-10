@@ -1,0 +1,32 @@
+//========= Copyright Valve Corporation ============//
+//-----------------------------------------------------------------------------
+//	emptydll.VPC
+//
+//	Project Script for the an empty dll that will fail when you try to load it as vrclient.dll
+//-----------------------------------------------------------------------------
+$macro SRCDIR		"..\.."
+
+$include "$SRCDIR\vpc_scripts\platform_dirs.vpc"
+
+$Macro OUTBINDIR	"$TESTPUBLIC\emptydll\bin"
+$Macro OUTBINNAME	"vrclient"
+$Macro OUTBINNAME	"vrclient_x64" [$WIN64]
+
+$include "$SRCDIR\vpc_scripts\source_dll_base.vpc"
+
+$Configuration
+{
+	$General
+	{
+		$OutputDirectory		".\EmptyDLL"   [$OSXALL]
+	}	
+}
+
+$Project "emptydll (Test)"
+{
+	$Folder "Source Files"
+	{
+		$File "emptydll.cpp"
+	}
+}
+

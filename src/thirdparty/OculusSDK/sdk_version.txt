@@ -1,0 +1,1 @@
+This directory contains the Windows, OSX, and Linux versions of the Oculus SDK. Version 0.2.5 is the version that is being used to build the Oculus driver.

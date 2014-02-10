@@ -1,0 +1,70 @@
+//========= Copyright Valve Corporation ============//
+//-----------------------------------------------------------------------------
+//	vr_tests.VPC
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		".."
+$Macro OUTBINDIR	"$TESTPUBLIC"
+
+$Macro OUTBINNAME       "vr_tests_osx"   [$OSXALL]
+$Macro OUTBINNAME       "vr_tests_linux" [$LINUX]
+$Macro OUTBINNAME		"vr_tests_x64" [$WIN64]
+
+$Macro GENERATED_PROTO_DIR "$SRCDIR\tests\vr_protobufs"
+
+$Include "$SRCDIR\vpc_scripts\source_exe_con_base.vpc"
+$Include "$SRCDIR\common\common.vpc"
+
+$Configuration
+{
+	$General [$POSIX]
+	{
+		$GameOutputFile	 "$TESTPUBLIC/$OUTBINNAME"
+	}
+
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;$SRCDIR\thirdparty\gtest-1.6.0\include;$HDRPUBLIC"
+	}
+
+	$General
+	{
+		$AdditionalProjectDependencies	"$BASE;vrtest_api" 
+	}
+
+	$Linker
+	{
+		$AdditionalLibraryDirectories	"$BASE;$SRCDIR\thirdparty\gtest-1.6.0\xcode\build\$CONFIGURATION" [$OSXALL]
+		$AdditionalLibraryDirectories	"$BASE;$SRCDIR\thirdparty\gtest-1.6.0\xcode\build\$CONFIGURATION" [$OSXALL]
+	}	
+}
+
+
+$Project "vr_tests"
+{
+	$Folder	"Source Files"
+	{
+		$File	"test_main.cpp"
+	}
+
+	$Folder	"Test Files"
+	{
+		$File	"test_core.cpp"
+		$File	"test_pathtools.cpp"
+		$File	"test_math.cpp"
+	}
+
+	$folder	"Link Libraries"
+	{
+		$Lib $SRCDIR\thirdparty\gtest-1.6.0\msvc\gtest\$(Configuration)\Win32\gtest [$WIN32]
+		$Lib $SRCDIR\thirdparty\gtest-1.6.0\msvc\gtest\$(Configuration)\x64\gtest [$WIN64]
+		$Lib $SRCDIR\thirdparty\gtest-1.6.0\xcode\build\$CONFIGURATION\libgtest [$OSXALL]
+		$Lib $SRCDIR\thirdparty\gtest-1.6.0\lib\libgtest [$LINUX]
+		$ImpLib "$LIBPUBLIC\vrtest_api" [$WIN32]
+		$ImpLib "$LIBPUBLIC\vrtest_api_x64" [$WIN64]
+		$ImpLib vrtest_api [$OSXALL || $LINUX]
+	}
+}
+

@@ -1,0 +1,62 @@
+//========= Copyright Valve Corporation ============//
+$MacroRequired "GENERATED_PROTO_DIR"
+
+$Include "$SRCDIR\vpc_scripts\sdl2_include.vpc"
+
+$Include "$SRCDIR\vpc_scripts\protobuf_include.vpc"
+
+$include "$SRCDIR\vpc_scripts\protobuf_builder.vpc"
+$include "$SRCDIR\common\vr_messages_include.vpc"
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;$SRCDIR\common"
+	}
+	$Linker
+	{
+		$SystemFrameworks "$BASE;Foundation"
+	}
+}	
+
+
+$Project
+{
+	$Folder "Common Source Files"
+	{
+		$File "$SRCDIR\common\vrcommon\dirtools.cpp"
+		$File "$SRCDIR\common\vrcommon\dirtools.h"
+		$File "$SRCDIR\common\vrcommon\envvartools.cpp"
+		$File "$SRCDIR\common\vrcommon\envvartools.h"
+		$File "$SRCDIR\common\vrcommon\hmdmatrixtools.h"
+		$File "$SRCDIR\common\vrcommon\hmdplatform_private.cpp"
+		$File "$SRCDIR\common\vrcommon\hmdplatform_private.h"
+		$File "$SRCDIR\common\vrcommon\ipcpipe.cpp"
+		$File "$SRCDIR\common\vrcommon\ipcpipe.h"
+		$File "$SRCDIR\common\vrcommon\ipcposix.cpp" [$POSIX]
+		$File "$SRCDIR\common\vrcommon\ipctools.h"
+		$File "$SRCDIR\common\vrcommon\ipcwin32.cpp" [$WINDOWS]
+		$File "$SRCDIR\common\vrcommon\pathtools.cpp"
+		$File "$SRCDIR\common\vrcommon\pathtools.h"
+		$File "$SRCDIR\common\vrcommon\processtools.cpp"
+		$File "$SRCDIR\common\vrcommon\processtools.h"
+		$File "$SRCDIR\common\vrcommon\sharedlibtools.cpp"
+		$File "$SRCDIR\common\vrcommon\sharedlibtools.h"
+		$File "$SRCDIR\common\vrcommon\strtools.cpp"
+		$File "$SRCDIR\common\vrcommon\strtools.h"
+		$File "$SRCDIR\common\vrcommon\osxfilebridge.mm" [$OSXALL]
+		$File "$SRCDIR\common\vrcommon\osxfilebridge.h" [$OSXALL]	
+		$File "$SRCDIR\common\vrcommon\threadtools.cpp"
+		$File "$SRCDIR\common\vrcommon\threadtools.h"
+		$File "$SRCDIR\common\vrcommon\vripcconstants.cpp"
+		$File "$SRCDIR\common\vrcommon\vripcconstants.h"
+		$File "$SRCDIR\common\vrcommon\vrlog.cpp"
+		$File "$SRCDIR\common\vrcommon\vrlog.h"
+		$File "$SRCDIR\common\vrcommon\timeutils.cpp"
+		$File "$SRCDIR\common\vrcommon\timeutils.h"
+
+		$File "$SRCDIR\common\ihmdsystem.h"
+	}
+}
+

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+OS=`uname`
+
+case $OS in
+"Darwin")
+	BINNAME=vrcmd_osx
+	export DYLD_LIBRARY_PATH=$PWD:$DYLD_LIBRARY_PATH
+	;;
+"Linux")
+	BINNAME=vrcmd_linux
+	export LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH
+	;;
+*)
+	echo "Can't find right openvr binary, fix the script."
+	exit -1
+	;;
+esac
+
+./$BINNAME "$@"

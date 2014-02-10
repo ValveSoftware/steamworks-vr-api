@@ -1,0 +1,53 @@
+//========= Copyright Valve Corporation ============//
+//-----------------------------------------------------------------------------
+//	driver_oculus.VPC
+//
+//	Project Script for the Oculus vr driver
+//-----------------------------------------------------------------------------
+$macro SRCDIR		"..\.."
+$Macro OUTBINDIR	"$DRIVERPUBLIC\oculus\bin"
+
+$include "$SRCDIR\vpc_scripts\source_dll_base.vpc"
+$include "$SRCDIR\common\common_nodepends.vpc"
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;$HDRPUBLIC;"\
+			"$SRCDIR\thirdparty\OculusSDK\LibOVR\Include"
+	}
+	$Linker
+	{
+		$AdditionalLibraryDirectories   "$BASE;$SRCDIR\thirdparty\OculusSDK\LibOVR\Lib\MacOS\Release" [$OSXALL]
+		$SystemFrameworks               "$BASE;ApplicationServices;IOKit"
+		$SystemLibraries		"$BASE;udev;X11;Xext;Xinerama" [$LINUX]
+	}
+}	
+
+
+$Project "driver_oculus"
+{
+	$Folder "Source Files"
+	{
+		$File "driver_oculus.cpp"
+		$File "oculushmdlatest.cpp"
+		$File "oculushmdlatest.h"
+	}
+
+	$Folder "Link Libraries"
+	{
+		$File	"$SRCDIR\thirdparty\OculusSDK\LibOVR\Lib\Win32\libovr.lib"  [$WIN32]
+		{
+			$Configuration "Debug" { $ExcludedFromBuild	"Yes" }
+		}
+		$File	"$SRCDIR\thirdparty\OculusSDK\LibOVR\Lib\Win32\libovrd.lib"  [$WIN32]
+		{
+			$Configuration "Release" { $ExcludedFromBuild	"Yes" }
+		}
+
+		$Lib	"$SRCDIR\thirdparty\OculusSDK\LibOVR\Lib\MacOS\Release\libovr"  [$OSXALL]
+		$Lib	"$SRCDIR\thirdparty\OculusSDK\LibOVR\Lib\Linux\Release\i386\libovr"  [$LINUX]
+	}
+}
+

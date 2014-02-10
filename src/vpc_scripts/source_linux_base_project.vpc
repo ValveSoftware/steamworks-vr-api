@@ -1,0 +1,48 @@
+//========= Copyright Valve Corporation ============//
+$MacroRequired				"SRCDIR"
+
+$Include "$SRCDIR\vpc_scripts\version.vpc"
+$Include "$SRDCIR\vpc_scripts\source_base.vpc"
+
+
+
+$Configuration "Debug"
+{
+	$Compiler
+	{
+		$PreprocessorDefinitions			"DEBUG;_DEBUG"
+		$OptimizerLevel					"-gdwarf-2 -g2 $(OptimizerLevel_CompilerSpecific)"
+	}
+}
+
+$Configuration "Release"
+{
+	$Compiler
+	{
+		$PreprocessorDefinitions		"NDEBUG"
+		$PreprocessorDefinitions		"$BASE;RELEASEASSERTS" [$RELEASEASSERTS]
+		$OptimizerLevel				"-gdwarf-2 -g2 $(OptimizerLevel_CompilerSpecific)"
+	}
+}
+
+$Configuration
+{
+	$General
+	{
+		$ConfigurationType				"Application (.exe)"
+	}
+
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$SRCDIR\common"
+		$PreprocessorDefinitions		"$BASE;GNUC;POSIX;COMPILER_GCC;MEMOVERRIDE_MODULE=$PROJECTNAME;_DLL_EXT=$_DLL_EXT"
+		$PreprocessorDefinitions		"$BASE;DEDICATED" [$DEDICATED]
+		$PreprocessorDefinitions		"$BASE;_LINUX;LINUX"		[$LINUXALL]
+		$SymbolVisibility				"hidden" 		[$POSIX]
+		$PreprocessorDefinitions		"$BASE;POSIX;_POSIX"		[$POSIX]
+		
+		$GCC_ExtraCompilerFlags			"-U_FORTIFY_SOURCE" [$LINUXALL]
+		$Create/UsePCHThroughFile	"stdafx.h"
+	}
+}
+

@@ -1,0 +1,40 @@
+//-----------------------------------------------------------------------------
+//	GROUPS.VGC
+//
+//	Group Configurations for all VR Projects
+//-----------------------------------------------------------------------------
+
+///////////////////////
+// Group definitions //
+///////////////////////
+
+$Group "public"
+{
+	"vrtest_api"
+}
+
+$Group "install"
+{
+	"driver_oculus"
+	"vrclient"
+	"vrserver"
+	"vrcmd"
+}
+
+$Group "everything"
+{
+	"driver_oculus"
+	"emptydll"
+	"nointerfacedll"
+	"oculus_tests"
+	"vrclient"
+	"vrserver"
+	"vrcmd"
+	"vrtest_api"
+	"vr_tests"
+}
+
+$Group "drivers"
+{
+	"driver_oculus"
+}

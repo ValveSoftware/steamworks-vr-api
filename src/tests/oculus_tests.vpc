@@ -1,0 +1,69 @@
+//========= Copyright Valve Corporation ============//
+//-----------------------------------------------------------------------------
+//	oculus_tests.VPC
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		".."
+$Macro OUTBINDIR	"$TESTPUBLIC"
+$Macro GAMENAME		"oculus" // fixes the intermediate dir
+
+$Macro OUTBINNAME       "oculus_tests_x64"   [$WIN64]
+$Macro OUTBINNAME       "oculus_tests_osx"   [$OSXALL]
+$Macro OUTBINNAME       "oculus_tests_linux" [$LINUX]
+
+$Macro GENERATED_PROTO_DIR "$SRCDIR\tests\oculus_protobufs"
+$Macro GENERATED_PROTO_DIR "$SRCDIR\tests\oculus_protobufs_x64" [$WIN64]
+
+$Include "$SRCDIR\vpc_scripts\source_exe_con_base.vpc"
+$Include "$SRCDIR\common\common.vpc"
+
+$Configuration
+{
+	$General [$POSIX]
+	{
+		$GameOutputFile	 "$TESTPUBLIC/$OUTBINNAME"
+	}
+
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;$SRCDIR\thirdparty\gtest-1.6.0\include;$HDRPUBLIC"
+	}
+
+	$General
+	{
+		$AdditionalProjectDependencies	"$BASE;vrtest_api"
+	}
+
+	$Linker
+	{
+		$AdditionalLibraryDirectories	"$BASE;$SRCDIR\thirdparty\gtest-1.6.0\xcode\build\$CONFIGURATION" [$OSXALL]
+	}	
+}
+
+
+$Project "oculus_tests"
+{
+	$Folder	"Source Files"
+	{
+		$File	"test_main.cpp"
+	}
+
+	$Folder	"Test Files"
+	{
+		$File	"test_oculus.cpp"
+	}
+
+	$folder	"Link Libraries"
+	{
+		$Lib $SRCDIR\thirdparty\gtest-1.6.0\msvc\gtest\$(Configuration)\Win32\gtest [$WIN32]
+		$Lib $SRCDIR\thirdparty\gtest-1.6.0\msvc\gtest\$(Configuration)\x64\gtest [$WIN64]
+		$Lib libgtest [$OSXALL]    // path has to be hand specificed on OSX anyway
+		$Lib $SRCDIR\thirdparty\gtest-1.6.0\lib\libgtest [$LINUX]
+		$ImpLib "vrtest_api" [!$WIN64]	
+		$ImpLib "vrtest_api_x64" [$WIN64]	
+	}
+
+}
+

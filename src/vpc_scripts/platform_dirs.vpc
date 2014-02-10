@@ -1,0 +1,5 @@
+//========= Copyright Valve Corporation ============//
+﻿$Macro PLATSUBDIR	"\win32"	[$WIN32]
+$Macro PLATSUBDIR	"\win64"	[$WIN64]
+$Macro PLATSUBDIR	"\linux32" [$LINUX32]
+$Macro PLATSUBDIR	"\osx32" [$OSX32]

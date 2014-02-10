@@ -1,0 +1,128 @@
+float c_rg_to_rb_ratio = 0.522;
+
+sampler2D mainTex : register(s0);
+sampler2D filterTex : register(s1);
+float4x4 invProj : register(c12);
+float4x4 rot : register(c16); // use 3x3?
+float4 P0 : register(c20);
+float4x2 kernel : register(c21);
+float4 coef : register(c23); // x: 2.0 * theta, y: aspect / scale, z: aspect
+float4 uvOffset : register(c24);
+
+struct RGB_SAMPLE_COORDS {
+	float2 xy_red;
+	float2 xy_green;
+	float2 xy_blue;
+};
+
+struct Fullscreen_Quad_Vert {
+	float4 position : SV_POSITION;
+	float2 texcoord: TEXCOORD0;
+	float4 color : COLOR;
+};
+
+RGB_SAMPLE_COORDS undistort_coords_from_texture(float2 norm01_coord)
+{
+	RGB_SAMPLE_COORDS samp;
+
+	float4 distort_samp = tex2D(filterTex, norm01_coord);
+
+	samp.xy_red = float2(distort_samp.x, distort_samp.y);
+	samp.xy_blue = float2(distort_samp.z, distort_samp.w);
+	samp.xy_green = samp.xy_red + c_rg_to_rb_ratio * ( samp.xy_blue - samp.xy_red );
+
+	return samp;
+}
+
+float4 background(float3 ray)
+{
+	return float4(0, 0, 0, 0); // could do something cool here
+}
+
+float4 raycast(float2 uv)
+{
+	float4 ndc = float4(2.0f * uv.x - 1.0f, 1.0f - 2.0f * uv.y, 0, 1);
+
+	ndc = mul(invProj, ndc); // generate a ray from normalized device coordinates
+	ndc /= ndc.w;
+	ndc.w = 0.0f;
+	float4 V = normalize(mul(rot, ndc));
+
+	float a = dot(V.xz, V.xz);
+	float b = 2.0f * dot(V.xz, P0.xz);
+	float c = dot(P0.xz, P0.xz) - P0.w; // r^2 in P0.w
+
+	float det = b * b - 4.0f * a * c;
+	if (det <= 0.0f)
+		return background(V.xyz);
+
+	float t = (sqrt(det) - b) / (2.0f * a);
+	if (t <= 0.0f)
+		return background(V.xyz);
+
+	float3 P = P0.xyz + V.xyz * t;
+	P.x = atan2(P.x, -P.z) / coef.x;
+	P.y *= coef.y;
+
+	uv.x = P.x + 0.5f;
+	uv.y = 0.5f - P.y;
+
+	uv += uvOffset.xy;
+	uv *= uvOffset.zw;
+
+#if 1 // fade edges
+	float2 threshold = float2(0.01f, 0.01f * coef.z);
+	float2 edge = saturate((abs(P.xy) + threshold - 0.5f) / threshold);
+	float bg = dot(edge,edge);
+	return lerp(tex2D(mainTex, uv), background(V.xyz), bg);
+#else
+	if (abs(P.x) > 0.5f || abs(P.y) > 0.5f)
+		return background(V.xyz);
+
+	return tex2D(mainTex, uv);
+#endif
+}
+
+float4 sample_chromatic(float2 uv)
+{
+	RGB_SAMPLE_COORDS samp = undistort_coords_from_texture(uv);
+
+	float4 redsamp = raycast(samp.xy_red);
+	float4 greensamp = raycast(samp.xy_green);
+	float4 bluesamp = raycast(samp.xy_blue);
+
+	float4 color;
+	color.r = redsamp.r;
+	color.g = greensamp.g;
+	color.b = bluesamp.b;
+	color.a = greensamp.a;
+
+	float threshold = saturate( dot((samp.xy_green < float2(0.01,0.01)), float2(1,1)) + dot((samp.xy_green > float2(0.99,0.99)), float2(1,1)) );
+	return lerp(color, float4(0,0,0,color.a), threshold); // black edges to avoid leaving a gap since game masking may differ slightly
+}
+
+struct PS_OUTPUT {
+	float4 color : COLOR;
+};
+
+PS_OUTPUT PS(Fullscreen_Quad_Vert input)
+{
+	PS_OUTPUT o;
+	o.color = sample_chromatic(input.texcoord.xy);
+	o.color *= input.color;
+	return o;
+}
+
+PS_OUTPUT PSAA(Fullscreen_Quad_Vert input)
+{
+	float4 c1 = sample_chromatic(input.texcoord.xy + kernel._11_12);
+	float4 c2 = sample_chromatic(input.texcoord.xy + kernel._21_22);
+	float4 c3 = sample_chromatic(input.texcoord.xy + kernel._31_32);
+	float4 c4 = sample_chromatic(input.texcoord.xy + kernel._41_42);
+
+	PS_OUTPUT o;
+	o.color = (c1 + c2 + c3 + c4) / 4.0f;
+	o.color *= input.color;
+	return o;
+}
+

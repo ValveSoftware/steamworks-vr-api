@@ -1,0 +1,59 @@
+//========= Copyright Valve Corporation ============//
+//-----------------------------------------------------------------------------
+//	vrtest_api.VPC
+//
+//	Project Script for the vrtest_api lib/dll that load the actual implementation
+//  from vrclient.dll
+//-----------------------------------------------------------------------------
+$macro SRCDIR		".."
+
+$macro OUTBINDIR	"$BINPUBLIC"
+$macro OUTBINNAME	"vrtest_api"
+$macro OUTBINNAME	"vrtest_api_x64" [$WIN64]
+$macro OUTLIBDIR	"$LIBPUBLIC"
+$macro OUTLIBNAME	"vrtest_api"
+$macro OUTLIBNAME	"vrtest_api_x64" [$WIN64]
+
+$include "$SRCDIR\vpc_scripts\source_dll_base.vpc"
+$include "$SRCDIR\vpc_scripts\vr_public.vpc"
+$include "$SRCDIR\common\common_nodepends.vpc"
+
+$include "$SRCDIR\vpc_scripts\copy_target_dll_to_test.vpc"
+
+$Configuration
+{
+	$General [$POSIX]
+	{
+		$GameOutputFile	 "$TESTPUBLIC/$_IMPLIB_PREFIX$OUTBINNAME$_DLL_EXT"
+	}
+
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;$HDRPUBLIC"
+	}
+
+	$Compiler
+	{
+		$PreprocessorDefinitions		"$BASE;VR_API_EXPORT;"
+	}
+
+	$Linker
+	{
+		$ImportLibrary	"$LIBPUBLIC\$_IMPLIB_PREFIX$OUTBINNAME$_IMPLIB_EXT"
+	}
+
+	$PreLinkEvent [$WINDOWS]
+	{
+		$CommandLine	"call $SRCDIR\vpc_scripts\valve_p4_edit.cmd $LIBPUBLIC\$(TargetName).lib $SRCDIR" "\n" \
+						"$BASE" [!$SOURCESDK]
+	}
+}
+
+$Project "vrtest_api"
+{
+	$Folder "Source Files"
+	{
+		$File "vrtest_api.cpp"
+	}
+}
+

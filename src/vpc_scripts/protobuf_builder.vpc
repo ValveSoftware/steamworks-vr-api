@@ -1,0 +1,27 @@
+//========= Copyright Valve Corporation ============//
+
+$MacroRequired	GENERATED_PROTO_DIR
+
+$CustomBuildStep "proto"
+{
+	$Description	"Running Protocol Buffer Compiler on $(InputFileName)..."
+	$CommandLine	"if not exist $GENERATED_PROTO_DIR mkdir $GENERATED_PROTO_DIR" "\n" \
+					"$SRCDIR\devtools\bin\win32\protoc.exe --proto_path=$SRCDIR\thirdparty\protobuf-2.3.0\src --proto_path=$(InputDir) --cpp_out=$GENERATED_PROTO_DIR $(InputPath)" [$WINDOWS]
+	$CommandLine	"mkdir $GENERATED_PROTO_DIR 2> /dev/null;"  \
+					"$SRCDIR/devtools/bin/osx32/protoc --proto_path=$SRCDIR\thirdparty\protobuf-2.3.0\src --proto_path=$(InputDir) --cpp_out=$GENERATED_PROTO_DIR $(InputPath)" [$OSXALL]
+	$CommandLine	"mkdir $GENERATED_PROTO_DIR 2> /dev/null;"  \
+					"$SRCDIR/devtools/bin/linux/protoc --proto_path=$SRCDIR\thirdparty\protobuf-2.3.0\src --proto_path=$(InputDir) --cpp_out=$GENERATED_PROTO_DIR $(InputPath)" [$LINUXALL]
+	$Outputs		"$GENERATED_PROTO_DIR\$(InputName).pb.cc;$GENERATED_PROTO_DIR\$(InputName).pb.h"
+}
+
+
+$Configuration
+{
+	$Compiler
+	{
+		// General
+		$AdditionalIncludeDirectories		"$BASE;$GENERATED_PROTO_DIR;$SRCDIR\thirdparty\protobuf-2.3.0\src"
+	}
+}
+
+

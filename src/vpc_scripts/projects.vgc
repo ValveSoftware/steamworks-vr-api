@@ -1,0 +1,55 @@
+//-----------------------------------------------------------------------------
+//	PROJECTS.VGC
+//
+//	Project Configurations for all SteamVR Projects
+//-----------------------------------------------------------------------------
+
+/////////////////////////
+// Project definitions //
+/////////////////////////
+
+$Project "driver_oculus"
+{
+	"drivers\oculus\driver_oculus.vpc" [!$WIN64]
+
+}
+
+$Project "emptydll"
+{
+	"tests\emptydll\emptydll.vpc"
+}
+
+$Project "nointerfacedll"
+{
+	"tests\nointerfacedll\nointerfacedll.vpc"
+}
+
+$Project "vrclient"
+{
+	"vrclient\vrclient.vpc"
+}
+
+$Project "vrcmd"
+{
+	"vrcmd\vrcmd.vpc"
+}
+
+$Project "vrserver"
+{
+	"vrserver\vrserver.vpc"  [!$WIN64]
+}
+
+$Project "vrtest_api"
+{
+	"vrtest_api\vrtest_api.vpc"
+}
+
+$Project "vr_tests"
+{
+	"tests\vr_tests.vpc"
+}
+
+$Project "oculus_tests"
+{
+	"tests\oculus_tests.vpc"
+}

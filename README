@@ -1,0 +1,9 @@
+This repository contains the source code for the Steamworks VR API. It is 
+provided to ease debugging and allow experimentation with new kinds of
+hardware. LICENSE.txt contains the license under which this code is 
+available, so please read it before using any part of this repository.
+
+WARNING: Although this repository contains a version of steamvr.h you should
+not ship compiled against that version of the interface. Backward 
+compatability is only guaranteed against versions of steamvr.h that have 
+shipped in a Steamworks SDK release.

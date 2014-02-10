@@ -1,0 +1,38 @@
+//========= Copyright Valve Corporation ============//
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;$SRCDIR\common"
+	}
+	$Linker
+	{
+		$SystemFrameworks "$BASE;Foundation"
+	}
+}	
+
+
+$Project
+{
+	$Folder "Common Source Files"
+	{
+		$File "$SRCDIR\common\vrcommon\dirtools.cpp"
+		$File "$SRCDIR\common\vrcommon\dirtools.h"
+		$File "$SRCDIR\common\vrcommon\envvartools.cpp"
+		$File "$SRCDIR\common\vrcommon\envvartools.h"
+		$File "$SRCDIR\common\vrcommon\hmdmatrixtools.h"
+		$File "$SRCDIR\common\vrcommon\hmdplatform_private.cpp"
+		$File "$SRCDIR\common\vrcommon\hmdplatform_private.h"
+		$File "$SRCDIR\common\vrcommon\pathtools.cpp"
+		$File "$SRCDIR\common\vrcommon\pathtools.h"
+		$File "$SRCDIR\common\vrcommon\sharedlibtools.cpp"
+		$File "$SRCDIR\common\vrcommon\sharedlibtools.h"
+		$File "$SRCDIR\common\vrcommon\strtools.cpp"
+		$File "$SRCDIR\common\vrcommon\strtools.h"
+		$File "$SRCDIR\common\vrcommon\osxfilebridge.mm" [$OSXALL]
+		$File "$SRCDIR\common\vrcommon\osxfilebridge.h" [$OSXALL]	
+
+		$File "$SRCDIR\common\ihmdsystem.h"
+	}
+}
+

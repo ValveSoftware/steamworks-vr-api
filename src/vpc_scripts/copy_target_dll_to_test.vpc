@@ -1,0 +1,19 @@
+//========= Copyright Valve Corporation ============//
+$MacroRequired				"TESTPUBLIC"
+$MacroRequired              "OUTBINNAME"
+$MacroRequired              "_DLL_EXT"
+$MacroRequired              "TARGETCOPYNAME" "$OUTBINNAME"
+
+$Configuration
+{
+    $General
+    {
+        $TargetCopies                   "$BASE $TESTPUBLIC\$TARGETCOPYNAME$_DLL_EXT" [!$WINDOWS]
+    }
+	$PostBuildEvent [$WINDOWS && !$ANALYZE]
+	{
+		$CommandLine					"$BASE" "\n" \
+										"call $SRCDIR\devtools\bin\filecopy_p4.bat $(TargetDir)$(TargetName).dll $TESTPUBLIC\$TARGETCOPYNAME.dll $SRCDIR" "\n" \
+										"call $SRCDIR\devtools\bin\filecopy_p4.bat $(TargetDir)$(TargetName).pdb $TESTPUBLIC\$TARGETCOPYNAME.pdb $SRCDIR" [!$SOURCESDK]
+	}
+}

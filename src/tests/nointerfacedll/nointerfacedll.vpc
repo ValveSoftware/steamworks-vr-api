@@ -1,0 +1,37 @@
+//========= Copyright Valve Corporation ============//
+//-----------------------------------------------------------------------------
+//	nointerfacedll.VPC
+//
+//	Project Script for the a no interface dll that will always return NULL for
+//  any requested interface
+//-----------------------------------------------------------------------------
+$macro SRCDIR		"..\.."
+$include "$SRCDIR\vpc_scripts\platform_dirs.vpc"
+$Macro OUTBINDIR	"$TESTPUBLIC\nointerfacedll\bin"
+$Macro OUTBINNAME	"vrclient"
+$Macro OUTBINNAME	"vrclient_x64" [$WIN64]
+
+$include "$SRCDIR\vpc_scripts\source_dll_base.vpc"
+
+$Configuration
+{
+	$General
+	{
+		$OutputDirectory		".\NoInterfaceDLL"   [$OSXALL]
+	}	
+
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;$HDRPUBLIC"
+		$PreprocessorDefinitions	"$BASE;VR_API_EXPORT"
+	}
+}	
+
+$Project "nointerfacedll (Test)"
+{
+	$Folder "Source Files"
+	{
+		$File "nointerfacedll.cpp"
+	}
+}
+
