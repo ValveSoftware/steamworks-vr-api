@@ -12,7 +12,7 @@ struct VRSharedState_t;
 class CVRClient
 {
 public:
-	bool BInit();
+	vr::HmdError Init();
 	void Cleanup();
 	
 	CVRSharedState *GetSharedState() { return &m_sharedState; }

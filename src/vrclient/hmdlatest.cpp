@@ -152,21 +152,13 @@ DistortionCoordinates_t CHmdLatest::ComputeDistortion( Hmd_Eye eEye, float fU, f
 	}
 }
 
-int32_t CHmdLatest::GetD3D9AdapterIndex()
+int CHmdLatest::GetSDLDisplayIndex()
 {
-#if defined(_WIN32)
-    int32_t x, y;
+	int32_t x, y;
 	uint32_t width, height;
 
-	// Init the video bits of SDL if we they aren't already active
-	bool bWasInit = 0 != SDL_WasInit( SDL_INIT_VIDEO );
-	if( !bWasInit )
-	{
-		SDL_Init( SDL_INIT_VIDEO );
-	}
+	int displayIndex = -1;
 
-
-	int32_t nAdapterIndex = -1; 
 	GetWindowBounds( &x, &y, &width, &height );
 	for( int i=0; i<SDL_GetNumVideoDisplays(); i++ )
 	{
@@ -175,19 +167,70 @@ int32_t CHmdLatest::GetD3D9AdapterIndex()
 		if( bounds.x == x && bounds.y == y 
 			&& bounds.w == (int)width && bounds.h == (int)height )
 		{
-			nAdapterIndex = SDL_Direct3D9GetAdapterIndex( i );
+			displayIndex = i;
 			break;
 		}
 	}
-	
+
+	return displayIndex;
+}
+
+int32_t CHmdLatest::GetD3D9AdapterIndex()
+{
+#if defined(_WIN32)
+	// Init the video bits of SDL if we they aren't already active
+	bool bWasInit = 0 != SDL_WasInit( SDL_INIT_VIDEO );
+	if( !bWasInit )
+	{
+		SDL_Init( SDL_INIT_VIDEO );
+	}
+
+	int displayIndex = GetSDLDisplayIndex();
+	int32_t adapterIndex = -1;
+	if( displayIndex != -1 )
+		adapterIndex = SDL_Direct3D9GetAdapterIndex( displayIndex );
+
 	if( !bWasInit )
 	{
 		SDL_QuitSubSystem( SDL_INIT_VIDEO );
 	}
 
-	return nAdapterIndex;
+	return adapterIndex;
 #else
     return 0;
+#endif
+}
+
+void CHmdLatest::GetDXGIOutputInfo( int32_t *pnAdapterIndex, int32_t *pnAdapterOutputIndex )
+{
+	if( pnAdapterIndex )
+		*pnAdapterIndex = -1;
+	if( pnAdapterOutputIndex )
+		*pnAdapterOutputIndex = -1;
+	if( !pnAdapterIndex || !pnAdapterOutputIndex )
+		return;
+#if defined(_WIN32)
+	// Init the video bits of SDL if we they aren't already active
+	bool bWasInit = 0 != SDL_WasInit( SDL_INIT_VIDEO );
+	if( !bWasInit )
+	{
+		SDL_Init( SDL_INIT_VIDEO );
+	}
+
+	int displayIndex = GetSDLDisplayIndex();
+	if( displayIndex != -1 )
+	{
+		int adapter, output;
+		SDL_DXGIGetOutputInfo( displayIndex, &adapter, &output );
+		*pnAdapterIndex = adapter;
+		*pnAdapterOutputIndex = output;
+	}
+
+	if( !bWasInit )
+	{
+		SDL_QuitSubSystem( SDL_INIT_VIDEO );
+	}
+
 #endif
 }
 
@@ -225,7 +268,7 @@ bool CHmdLatest::GetWorldFromHeadPose( float fSecondsFromNow, HmdMatrix34_t *pmP
 
 	static const double minPredictionTime = -0.100;
 	static const double maxPredictionTime =  0.100;
-	dt = std::min(std::max(dt, minPredictionTime), maxPredictionTime);
+	dt = Clamp( dt, minPredictionTime, maxPredictionTime );
 
 	// driver pos = pos + (vel + acc * dt/2)*dt;
 	HmdVector3_t vVel = HmdVector_Add( rawPose.vVelocity,  HmdVector_ScalarMultiply( rawPose.vAcceleration, dt * 0.5 ) );

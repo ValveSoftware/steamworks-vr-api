@@ -2,6 +2,9 @@
 #include "SDL_loadso.h"
 #include "notifications.h"
 #include "vrcommon/pathtools.h"
+#if defined( _WIN32 )
+#include <Windows.h>
+#endif
 
 typedef void (*NoArgNotificationFn_t)();
 
@@ -9,7 +12,7 @@ typedef void (*NoArgNotificationFn_t)();
 void CallNoArgNotification( const char *pchModuleName, const char *pchProcName )
 {
 #if defined(_WIN32)
-	void * pMod = SDL_GetLoadedObject( pchModuleName );
+	void * pMod = (void *)GetModuleHandle( pchModuleName );
 	if( pMod )
 	{
 		NoArgNotificationFn_t fn = (NoArgNotificationFn_t)SDL_LoadFunction( pMod, pchProcName );
@@ -52,4 +55,5 @@ void NotifyVR_Shutdown( )
 {
 	CallNoArgNotification( "gameoverlayrenderer" DYNAMIC_LIB_EXT, "NotifyOpenVRCleanup" );
 	CallNoArgNotification( "gameoverlayrenderer" DYNAMIC_LIB_EXT, "NotifyVRShutdown");
+	CallNoArgNotification( "gameoverlayrenderer" DYNAMIC_LIB_EXT, "NotifyVRCleanup" );
 }

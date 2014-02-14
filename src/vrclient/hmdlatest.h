@@ -25,6 +25,7 @@ public:
 	virtual vr::HmdMatrix44_t GetEyeMatrix( vr::Hmd_Eye eEye ) OVERRIDE;
 	virtual bool  GetViewMatrix( float fSecondsFromNow, vr::HmdMatrix44_t *pMatLeftView, vr::HmdMatrix44_t *pMatRightView, vr::HmdTrackingResult *peResult ) OVERRIDE;
 	virtual int32_t GetD3D9AdapterIndex() OVERRIDE;
+	virtual void GetDXGIOutputInfo( int32_t *pnAdapterIndex, int32_t *pnOutputIndex ) OVERRIDE;
 
 	// Tracking Methods
 	virtual bool GetWorldFromHeadPose( float fPredictedSecondsFromNow, vr::HmdMatrix34_t *pmPose, vr::HmdTrackingResult *peResult ) OVERRIDE;
@@ -37,6 +38,8 @@ public:
 	virtual uint32_t GetDisplayId( char *pchBuffer, uint32_t unBufferLen ) OVERRIDE;
 
 private:
+	int GetSDLDisplayIndex();
+
 	CVRClient *m_pClient;
 
 	vr::HmdMatrix34_t m_TrackerZeroFromTrackerOrigin;

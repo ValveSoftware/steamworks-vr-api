@@ -101,9 +101,10 @@ HmdError CHmdSystemLatest::Init()
 		return HmdError_Init_UserConfigDirectoryInvalid;
 	}
 
-	if( !m_client.BInit() )
+	HmdError err = m_client.Init();
+	if( err != HmdError_None )
 	{
-		return HmdError_IPC_ConnectFailed;
+		return err;
 	}
 
 	m_hmd.Reset( &m_client );

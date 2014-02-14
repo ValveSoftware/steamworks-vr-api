@@ -6,7 +6,6 @@
 #if defined( _WIN32)
 #include <Windows.h>
 #include <direct.h>
-#include <atlcomcli.h>
 #include <Shobjidl.h>
 #include <KnownFolders.h>
 #elif defined OSX

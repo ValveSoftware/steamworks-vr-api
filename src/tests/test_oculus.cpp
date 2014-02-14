@@ -101,6 +101,15 @@ TEST_F( OculusDriver, GetAdapterIndex)
 	ASSERT_NE( nAdapter, -1 );
 }
 
+TEST_F( OculusDriver, GetDXGIInfo)
+{
+	int32_t nAdapterOutput;
+	int32_t nAdapter;
+	m_pHmd->GetDXGIOutputInfo( &nAdapter, &nAdapterOutput );
+	ASSERT_NE( nAdapter, -1 );
+	ASSERT_NE( nAdapterOutput, -1 );
+}
+
 TEST_F( OculusDriver, Zeroing )
 {
 	HmdMatrix34_t pose;

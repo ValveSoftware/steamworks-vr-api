@@ -12,13 +12,13 @@
 
 using namespace vr;
 
-bool CVRClient::BInit()
+HmdError CVRClient::Init()
 {
 	// log files go in prefpath/logs
 	char *pchUserConfigPath = SDL_GetPrefPath( "", "steamvr" );
 	if( !pchUserConfigPath )
 	{
-		return false;
+		return HmdError_Init_UserConfigDirectoryInvalid;
 	}
 	std::string sConfigPath = pchUserConfigPath;
 	SDL_free( pchUserConfigPath );
@@ -44,7 +44,7 @@ bool CVRClient::BInit()
 				if( !BStartVRServer() )
 				{
 					Log( "Failed to start vrserver. Giving up\n" );
-					return false;
+					return HmdError_IPC_ServerInitFailed;
 				}
 				bStartedServer = true;
 			}
@@ -71,7 +71,7 @@ bool CVRClient::BInit()
 			{
 				// FAILED! Don't retry
 				Log( "Received connect response %d. Giving up.\n", msgConnectResponse.result() );
-				return false;
+				return (HmdError)msgConnectResponse.result();
 			}
 			else
 			{
@@ -79,7 +79,10 @@ bool CVRClient::BInit()
 				Log( "Received success response from connect\n" );
 
 				// hook up our shared state to the shared mem
-				return m_sharedState.BInit( CVRSharedState::Client );
+				if( !m_sharedState.BInit( CVRSharedState::Client ) )
+					return HmdError_IPC_SharedStateInitFailed;
+				else
+					return HmdError_None;
 			}
 
 		}
@@ -89,7 +92,7 @@ bool CVRClient::BInit()
 
 	Log( "Giving up server connection after %d attempts\n", nConnectAttempt - 1 );
 
-	return false;
+	return HmdError_IPC_ConnectFailed;
 }
 
 
@@ -146,12 +149,12 @@ DistortionCoordinates_t CVRClient::ComputeDistortion( vr::Hmd_Eye eEye, float fU
 	if( m_pipe.SendProtobufMessageAndWaitForResponse( VRMsg_ComputeDistortion, msg, VRMsg_ComputeDistortionResponse, msgResponse, 100 ) )
 	{
 		DistortionCoordinates_t coords;
-		coords.rfRed[0] = msgResponse.red_u();
-		coords.rfRed[1] = msgResponse.red_v();
-		coords.rfGreen[0] = msgResponse.green_u();
-		coords.rfGreen[1] = msgResponse.green_v();
-		coords.rfBlue[0] = msgResponse.blue_u();
-		coords.rfBlue[1] = msgResponse.blue_v();
+		coords.rfRed[0] = Clamp( msgResponse.red_u(), 0.f, 1.f );
+		coords.rfRed[1] = Clamp( msgResponse.red_v(), 0.f, 1.f );
+		coords.rfGreen[0] = Clamp( msgResponse.green_u(), 0.f, 1.f );
+		coords.rfGreen[1] = Clamp( msgResponse.green_v(), 0.f, 1.f );
+		coords.rfBlue[0] = Clamp( msgResponse.blue_u(), 0.f, 1.f );
+		coords.rfBlue[1] = Clamp( msgResponse.blue_v(), 0.f, 1.f );
 		return coords;
 	}
 	else

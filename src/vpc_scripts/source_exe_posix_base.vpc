@@ -34,7 +34,7 @@ $Configuration
 	{
 		$OutputFile						"$OUTBINDIR/$OUTBINNAME"
 
-		$GCC_ExtraLinkerFlags			"-Wl,--no-as-needed -ltcmalloc_minimal -Wl,--as-needed" [$LINUXALL&&!$DEDICATED]
+		$GCC_ExtraLinkerFlags			"-Wl,--no-as-needed -Wl,--as-needed" [$LINUXALL&&!$DEDICATED]
 	}
 }
 
