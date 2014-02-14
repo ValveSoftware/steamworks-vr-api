@@ -41,6 +41,6 @@ CLANG_CXX_LANGUAGE_STANDARD = gnu++11
 // gets into the header map, so sacrifice speed for corectness.
 USE_HEADERMAP = NO
 
-SDKROOT = macosx10.7
+SDKROOT = macosx
 MACOSX_DEPLOYMENT_TARGET = 10.5
 GCC_FAST_MATH = YES
