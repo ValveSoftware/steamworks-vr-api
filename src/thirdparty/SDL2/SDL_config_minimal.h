@@ -1,7 +1,7 @@
 /* include/SDL_config.h.  Generated from SDL_config.h.in by configure.  */
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -76,7 +76,7 @@
 /* #undef HAVE_ALTIVEC_H */
 /* #undef HAVE_PTHREAD_NP_H */
 #define HAVE_LIBUDEV_H 1
-#define HAVE_DBUS_DBUS_H 1
+/* #undef HAVE_DBUS_DBUS_H */
 
 /* C library functions */
 #define HAVE_MALLOC 1
@@ -128,8 +128,9 @@
 #define HAVE_STRCASECMP 1
 /* #undef HAVE__STRNICMP */
 #define HAVE_STRNCASECMP 1
-#define HAVE_SSCANF 1
-#define HAVE_SNPRINTF 1
+/* #undef HAVE_SSCANF */
+#define HAVE_VSSCANF 1
+/* #undef HAVE_SNPRINTF */
 #define HAVE_VSNPRINTF 1
 #define HAVE_M_PI /**/
 #define HAVE_ATAN 1
@@ -194,8 +195,8 @@
 #define SDL_AUDIO_DRIVER_ALSA_DYNAMIC "libasound.so.2"
 /* #undef SDL_AUDIO_DRIVER_ARTS */
 /* #undef SDL_AUDIO_DRIVER_ARTS_DYNAMIC */
-#define SDL_AUDIO_DRIVER_PULSEAUDIO 1
-#define SDL_AUDIO_DRIVER_PULSEAUDIO_DYNAMIC "libpulse-simple.so.0"
+/* #undef SDL_AUDIO_DRIVER_PULSEAUDIO */
+/* #undef SDL_AUDIO_DRIVER_PULSEAUDIO_DYNAMIC */
 /* #undef SDL_AUDIO_DRIVER_HAIKU */
 /* #undef SDL_AUDIO_DRIVER_BSD */
 /* #undef SDL_AUDIO_DRIVER_COREAUDIO */
@@ -263,16 +264,23 @@
 /* #undef SDL_VIDEO_DRIVER_WINDOWS */
 /* #undef SDL_VIDEO_DRIVER_WAYLAND */
 /* #undef SDL_VIDEO_DRIVER_WAYLAND_QT_TOUCH */
+/* #undef SDL_VIDEO_DRIVER_WAYLAND_DYNAMIC */
+/* #undef SDL_VIDEO_DRIVER_WAYLAND_DYNAMIC_EGL */
+/* #undef SDL_VIDEO_DRIVER_WAYLAND_DYNAMIC_CURSOR */
+/* #undef SDL_VIDEO_DRIVER_WAYLAND_DYNAMIC_XKBCOMMON */
+/* #undef SDL_VIDEO_DRIVER_MIR */
+/* #undef SDL_VIDEO_DRIVER_MIR_DYNAMIC */
+/* #undef SDL_VIDEO_DRIVER_MIR_DYNAMIC_XKBCOMMON */
 #define SDL_VIDEO_DRIVER_X11 1
 /* #undef SDL_VIDEO_DRIVER_RPI */
-/* #undef SDL_VIDEO_DRIVER_X11_DYNAMIC */
-/* #undef SDL_VIDEO_DRIVER_X11_DYNAMIC_XEXT */
-/* #undef SDL_VIDEO_DRIVER_X11_DYNAMIC_XCURSOR */
-/* #undef SDL_VIDEO_DRIVER_X11_DYNAMIC_XINERAMA */
-/* #undef SDL_VIDEO_DRIVER_X11_DYNAMIC_XINPUT2 */
-/* #undef SDL_VIDEO_DRIVER_X11_DYNAMIC_XRANDR */
-/* #undef SDL_VIDEO_DRIVER_X11_DYNAMIC_XSS */
-/* #undef SDL_VIDEO_DRIVER_X11_DYNAMIC_XVIDMODE */
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC "libX11.so.6"
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XEXT "libXext.so.6"
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XCURSOR "libXcursor.so.1"
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XINERAMA "libXinerama.so.1"
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XINPUT2 "libXi.so.6"
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XRANDR "libXrandr.so.2"
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XSS "libXss.so.1"
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XVIDMODE "libXxf86vm.so.1"
 #define SDL_VIDEO_DRIVER_X11_XCURSOR 1
 #define SDL_VIDEO_DRIVER_X11_XINERAMA 1
 #define SDL_VIDEO_DRIVER_X11_XINPUT2 1

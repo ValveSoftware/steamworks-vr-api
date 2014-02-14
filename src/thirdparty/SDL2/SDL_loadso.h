@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -56,16 +56,6 @@ extern "C" {
  *  The 'sofile' parameter is a system dependent name of the object file.
  */
 extern DECLSPEC void *SDLCALL SDL_LoadObject(const char *sofile);
-
-/**
- *  This function returns a handle to an already-loaded shared object and 
- *  returns a pointer to the object handle. If the object file was not loaded
- *  the function returns NULL. This function adds a reference to the shared
- *  object, so the caller should call SDL_UnloadObject when they are finished
- *  with this reference to ensure that the object can be unloaded.
- *  The 'sofile' parameter is a system dependent name of the object file.
- */
-extern DECLSPEC void *SDLCALL SDL_GetLoadedObject(const char *sofile);
 
 /**
  *  Given an object handle, this function looks up the address of the
