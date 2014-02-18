@@ -29,8 +29,6 @@ void CallNoArgNotification( const char *pchModuleName, const char *pchProcName )
 		}
 
 #if defined(_WIN32)
-		// unload the module to free up the reference that was returned by SDL_GetLoadedObject
-		SDL_UnloadObject( pMod );
 	}
 #endif
 
