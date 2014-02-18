@@ -43,7 +43,7 @@ struct DriverPose_t
 	DriverPoseQuaternion_t qDriverFromHeadRotation;
 	double vecDriverFromHeadTranslation[ 3 ];
 
-	/* State of driver pose, in meters and radians.
+	/* State of driver pose, in meters and radians. */
 	/* Position of the driver tracking reference in driver world space
 	* +[0] (x) is right
 	* +[1] (y) is up
