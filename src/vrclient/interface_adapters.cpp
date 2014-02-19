@@ -1,6 +1,10 @@
 //========= Copyright Valve Corporation ============//
-#include "hmdlatest.h"
+#include "vr_controlpanel.h"
+#include "ihmdsystem.h"
 #include "steamvr.h"
+
+#include <string>
+#include "vrcommon/hmdplatform_private.h"
 
 using namespace vr;
 
@@ -27,7 +31,7 @@ public:
 		return NULL;
 	}
 
-	virtual void *GetInterface( IHmd *pHmdLatest ) = 0;
+	virtual void *GetInterface( IHmd *pHmdLatest, IHmdSystem *pSystemLatest ) = 0;
 
 private:
 	static InterfaceRegistrationBase *s_pFirst;
@@ -37,13 +41,38 @@ private:
 
 InterfaceRegistrationBase *InterfaceRegistrationBase::s_pFirst = NULL;
 
-void *FindInterface( const char *pchInterfaceName, vr::IHmd *pHmdLatest )
+class GenericInterfaceRegistration : public InterfaceRegistrationBase
+{
+public:
+	GenericInterfaceRegistration( const char *pchInterfaceName, void *pInterface ) 
+		: InterfaceRegistrationBase( pchInterfaceName ), m_pInterface( pInterface )
+	{
+
+	}
+
+	virtual void *GetInterface( IHmd *pHmdLatest, IHmdSystem *pSystemLatest ) OVERRIDE
+	{
+		return m_pInterface;
+	}
+
+private:
+	void *m_pInterface;
+};
+
+void RegisterInterface( const char *pchInterfaceName, void *pInterface )
+{
+	// for now, just leak this guy. He'll register in the global list on construction
+	GenericInterfaceRegistration *pReg = new GenericInterfaceRegistration( pchInterfaceName, pInterface );
+	(void)pReg;
+}
+
+void *FindInterface( const char *pchInterfaceName, vr::IHmd *pHmdLatest, IHmdSystem *pSystemLatest )
 {
 	InterfaceRegistrationBase *pReg = InterfaceRegistrationBase::Find( pchInterfaceName );
 	if( !pReg )
 		return NULL;
 
-	return pReg->GetInterface( pHmdLatest );
+	return pReg->GetInterface( pHmdLatest, pSystemLatest );
 }
 
 bool HasInterfaceAdapter( const char *pchInterfaceName )
@@ -62,7 +91,7 @@ public:
 
 	}
 
-	virtual void *GetInterface( IHmd *pHmdLatest ) OVERRIDE
+	virtual void *GetInterface( IHmd *pHmdLatest, IHmdSystem *pSystemLatest ) OVERRIDE
 	{
 		m_Interface.m_pHmdLatest = pHmdLatest;
 		return &m_Interface;
@@ -117,3 +146,39 @@ public:
 };
 
 static HmdInterfaceRegistration<CHmd_002> hmd002( "IHmd_002" );
+
+
+template< typename T >
+class SystemInterfaceRegistration : public InterfaceRegistrationBase
+{
+public:
+	SystemInterfaceRegistration( const char *pchInterfaceName ) 
+		: InterfaceRegistrationBase( pchInterfaceName )
+	{
+
+	}
+
+	virtual void *GetInterface( IHmd *pHmdLatest, IHmdSystem *pSystemLatest ) OVERRIDE
+	{
+		m_Interface.m_pSystemLatest = pSystemLatest;
+		return &m_Interface;
+	}
+
+private:
+	T m_Interface;
+};
+
+class CHmdSystem_001
+{
+public:
+	virtual HmdError Init() { return m_pSystemLatest->Init( NULL, NULL ); }
+	virtual void Cleanup() { m_pSystemLatest->Cleanup(); }
+	virtual HmdError IsInterfaceVersionValid( const char *pchInterfaceVersion ) { return m_pSystemLatest->IsInterfaceVersionValid( pchInterfaceVersion ); }
+	virtual void *GetCurrentHmd( const char *pchCoreVersion ) { return m_pSystemLatest->GetCurrentHmd( pchCoreVersion ); }
+	virtual IVRControlPanel *GetControlPanel( const char *pchControlPanelVersion, HmdError *peError ) { return (IVRControlPanel *)m_pSystemLatest->GetGenericInterface( pchControlPanelVersion, peError ); }
+
+	IHmdSystem *m_pSystemLatest;
+};
+
+static SystemInterfaceRegistration<CHmdSystem_001> system001( "IHmdSystem_001" );
+

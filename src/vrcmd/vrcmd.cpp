@@ -423,7 +423,7 @@ int main( int argc, char **argv )
 		return -1;
 	}
 
-	IVRControlPanel *pControlPanel = VR_GetControlPanel( IVRControlPanel_Version, &error );
+	IVRControlPanel *pControlPanel = (IVRControlPanel *)VR_GetGenericInterface( IVRControlPanel_Version, &error );
 	bool bRetVal = false;
 	if( pControlPanel )
 	{

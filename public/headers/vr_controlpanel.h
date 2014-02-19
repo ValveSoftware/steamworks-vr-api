@@ -65,9 +65,9 @@ public:
 static const char * const IVRControlPanel_Version = "IVRControlPanel_001";
 
 
-/** Returns the IVRControlPanel of the specified version. This method must be called after VR_Init. The
+/** Returns the interface of the specified version. This method must be called after VR_Init. The
 * pointer returned is valid until VR_Shutdown is called.
 */
-VR_INTERFACE IVRControlPanel *VR_GetControlPanel( const char *pchVRControlPanelInterfaceVersion, HmdError *peError );
+VR_INTERFACE void *VR_GetGenericInterface( const char *pchInterfaceVersion, HmdError *peError );
 
 }

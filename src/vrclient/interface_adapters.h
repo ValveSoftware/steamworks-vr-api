@@ -4,9 +4,13 @@
 namespace vr
 {
 	class IHmd;
+	class IHmdSystem;
 }
 
-extern void *FindInterface( const char *pchInterfaceName, vr::IHmd *pHmdLatest );
+/** Register an interface that is not an adapter */
+extern void RegisterInterface( const char *pchInterfaceName, void * );
+
+extern void *FindInterface( const char *pchInterfaceName, vr::IHmd *pHmdLatest, vr::IHmdSystem *pSystemLatest );
 extern bool HasInterfaceAdapter( const char *pchInterfaceName );
 
 

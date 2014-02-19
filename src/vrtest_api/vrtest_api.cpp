@@ -53,6 +53,9 @@ IHmd *VR_Init( HmdError *peError )
 		return NULL;
 	}
 
+	std::string sLogPath = Path_MakeAbsolute( "log", sPath );
+	std::string sConfigPath = Path_MakeAbsolute( "config", sPath );
+
 	// Because we don't have a way to select debug vs. release yet we'll just
 	// use debug if it's there
 	std::string sTestPath = Path_Join( sPath, "bin" );
@@ -107,7 +110,8 @@ IHmd *VR_Init( HmdError *peError )
 		return NULL;
 	}
 
-	HmdError err = g_pHmdSystem->Init();
+
+	HmdError err = g_pHmdSystem->Init( sLogPath.c_str(), sConfigPath.c_str() );
 	if( err != HmdError_None )
 	{
 		SharedLib_Unload( pMod );
@@ -174,7 +178,7 @@ void VR_Shutdown( )
 }
 
 
-IVRControlPanel *VR_GetControlPanel(const char *pchVRControlPanelInterfaceVersion, HmdError *peError)
+void *VR_GetGenericInterface(const char *pchInterfaceVersion, HmdError *peError)
 {
 	if( !g_pHmdSystem )
 	{
@@ -183,7 +187,7 @@ IVRControlPanel *VR_GetControlPanel(const char *pchVRControlPanelInterfaceVersio
 		return NULL;
 	}
 
-	return g_pHmdSystem->GetControlPanel( pchVRControlPanelInterfaceVersion, peError );
+	return g_pHmdSystem->GetGenericInterface( pchInterfaceVersion, peError );
 }
 
 }

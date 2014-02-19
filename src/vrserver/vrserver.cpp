@@ -17,6 +17,7 @@
 #include "vrcommon/hmdlog.h"
 #include "vrcommon/hmdplatform_private.h"
 #include "vrcommon/timeutils.h"
+#include "vrcommon/envvartools.h"
 
 #include "vr_messages.pb.h"
 
@@ -280,16 +281,20 @@ std::string GetDriverBaseDir( )
 
 HmdError CVRServer::Init()
 {
-	char *pchUserConfigPath = SDL_GetPrefPath( "", "steamvr" );
-	if( !pchUserConfigPath )
+	m_sUserConfigPath = GetEnvironmentVariable( "VR_CONFIG_PATH" );
+	if( m_sUserConfigPath.empty() )
 	{
-		return HmdError_Init_UserConfigDirectoryInvalid;
+		m_sUserConfigPath = Path_MakeAbsolute( "../config", Path_StripFilename( Path_GetExecutablePath() ) );
 	}
-	m_sUserConfigPath = pchUserConfigPath;
-	SDL_free( pchUserConfigPath );
 
-	InitLog( Path_Join( m_sUserConfigPath, "logs").c_str(), "server" );
-	Log( "VR server starting up\n" );
+	std::string sLogPath = GetEnvironmentVariable( "VR_LOG_PATH" );
+	if( sLogPath.empty() )
+	{
+		sLogPath = Path_MakeAbsolute( "../logs", Path_StripFilename( Path_GetExecutablePath() ) );
+	}
+
+	InitLog( sLogPath.c_str(), "vrserver" );
+	Log( "VR server starting up with config=%s\n", m_sUserConfigPath.c_str() );
 
 	std::string sDriverBaseDir = GetDriverBaseDir();
 

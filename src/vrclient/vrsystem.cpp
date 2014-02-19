@@ -8,6 +8,7 @@
 #include "vrcommon/strtools.h"
 #include "vrcommon/hmdlog.h"
 #include "vrcommon/vrlog.h"
+#include "vrcommon/envvartools.h"
 
 #include "vrclient.h"
 #include "hmdlatest.h"
@@ -32,26 +33,17 @@ static const char * const Old_IVRControlPanel_Version = "IOpenVRControlPanel_001
 class CHmdSystemLatest : public IHmdSystem, public IVRControlPanel
 {
 public:
+	CHmdSystemLatest();
 
 	// -----------------------------------------------
 	// ---------- From IHmdSystem --------------------
 	// -----------------------------------------------
 
-	/** Initializes the systems */
-	virtual HmdError Init() OVERRIDE;
-
-	/** cleans up everything in vrclient.dll and prepares the DLL to be unloaded */
+	virtual HmdError Init( const char *pchLogPath, const char *pchConfigPath ) OVERRIDE;
 	virtual void Cleanup() OVERRIDE;
-
-	/** checks to see if the specified interface/version is supported in this vrclient.dll */
 	virtual HmdError IsInterfaceVersionValid( const char *pchInterfaceVersion ) OVERRIDE;
-
-	/** Retrieves the specified version of the HmdCore interface. This is void because the 
-	* class name inside vrclient.dll might not match the class name inside vrclient.lib. */
 	virtual void *GetCurrentHmd( const char *pchCoreVersion ) OVERRIDE;
-
-	/** Retrieves the control panel interface from vrclient.dll */
-	virtual IVRControlPanel *GetControlPanel( const char *pchControlPanelVersion, HmdError *peError ) OVERRIDE;
+	virtual void *GetGenericInterface( const char *pchNameAndVersion, HmdError *peError ) OVERRIDE;
 
 	// -----------------------------------------------
 	// ---------- From IVRControlPanel -----------
@@ -82,6 +74,12 @@ private:
 CHmdSystemLatest g_hmdSystem;
 
 
+CHmdSystemLatest::CHmdSystemLatest()
+{
+	RegisterInterface( IHmdSystem_Version, (IHmdSystem *)this );
+	RegisterInterface( IVRControlPanel_Version, (IVRControlPanel *)this );
+}
+
 std::string GetResourceBaseDir()
 {
 	static const char *k_pchResourceRelativePath = "..\\resources";
@@ -93,13 +91,39 @@ std::string GetResourceBaseDir()
 
 
 /** Initializes the system */
-HmdError CHmdSystemLatest::Init() 
+HmdError CHmdSystemLatest::Init( const char *pchLogPath, const char *pchConfigPath ) 
 {
-	char *pchUserConfigPath = SDL_GetPrefPath( "", "steamvr" );
-	if( !pchUserConfigPath )
+	std::string sConfigPath;
+	if( pchConfigPath )
 	{
-		return HmdError_Init_UserConfigDirectoryInvalid;
+		sConfigPath = pchConfigPath;
 	}
+	else
+	{
+		sConfigPath = Path_MakeAbsolute( "../config", Path_StripFilename( Path_GetModulePath() ) );
+	}
+
+	std::string sLogPath;
+	if( pchLogPath )
+	{
+		sLogPath = pchLogPath;
+	}
+	else
+	{
+		sLogPath = Path_MakeAbsolute( "../logs", Path_StripFilename( Path_GetModulePath() ) );
+	}
+
+	InitLog( sLogPath.c_str(), "vrclient" );
+
+	Log( "vrclient startup with config=%s\n", sConfigPath.c_str() );
+
+	// set the env vars that will let the server know where to put logs and
+	// where to load config files from
+	SetEnvironmentVariable( "VR_LOG_PATH", sLogPath.c_str() );
+	SetEnvironmentVariable( "VR_CONFIG_PATH", sConfigPath.c_str() );
+
+	// register the Hmd interface
+	RegisterInterface( IHmd_Version, (IHmd *)&m_hmd );
 
 	HmdError err = m_client.Init();
 	if( err != HmdError_None )
@@ -150,25 +174,23 @@ void *CHmdSystemLatest::GetCurrentHmd( const char *pchHmdVersion )
 	else
 	{
 		// maybe we have an adapter from an old version
-		return (IHmd*)FindInterface( pchHmdVersion, &m_hmd );
+		return (IHmd*)FindInterface( pchHmdVersion, &m_hmd, this );
 	}
 }
 
 /** Retrieves the control panel interface from vrclient.dll */
-IVRControlPanel *CHmdSystemLatest::GetControlPanel( const char *pchControlPanelVersion, HmdError *peError )
+void *CHmdSystemLatest::GetGenericInterface( const char *pchNameAndVersion, HmdError *peError )
 {
-	if (!stricmp(pchControlPanelVersion, IVRControlPanel_Version) || !stricmp(pchControlPanelVersion, Old_IVRControlPanel_Version ) )
+	void * pInterface = FindInterface( pchNameAndVersion, &m_hmd, this );
+	HmdError error = HmdError_None;
+	if( !pInterface )
 	{
-		if( peError )
-			*peError = HmdError_None;
-		return this;
+		error = HmdError_Init_InterfaceNotFound;
 	}
-	else
-	{
-		if( peError )
-			*peError = HmdError_Init_InterfaceNotFound;
-		return NULL;
-	}
+	if( peError )
+		*peError = error;
+
+	return pInterface;
 }
 
 /** returns the number of drivers */
@@ -324,13 +346,12 @@ HMD_DLL_EXPORT void *HmdSystemFactory( const char *pInterfaceName, int *pReturnC
 		return NULL;
 	}
 
-	// right now we only support one version
-	if( 0 != stricmp( pInterfaceName, IHmdSystem_Version ) )
+	void *pInterface = FindInterface( pInterfaceName, NULL, &g_hmdSystem );
+	if( !pInterface )
 	{
 		*pReturnCode = HmdError_Init_InterfaceNotFound;
-		return NULL;
 	}
 
-	return &g_hmdSystem;
+	return pInterface;
 }
 

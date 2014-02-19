@@ -8,7 +8,7 @@ class IHmdSystem
 {
 public:
 	/** Initializes the system */
-	virtual HmdError Init() = 0;
+	virtual HmdError Init( const char *pchLogPath, const char *pchConfigPath ) = 0;
 
 	/** cleans up everything in vrclient.dll and prepares the DLL to be unloaded */
 	virtual void Cleanup() = 0;
@@ -20,10 +20,10 @@ public:
 	* class name inside vrclient.dll might not match the class name inside vrclient.lib. */
 	virtual void *GetCurrentHmd( const char *pchCoreVersion ) = 0;
 
-	/** Retrieves the control panel interface from vrclient.dll */
-	virtual IVRControlPanel *GetControlPanel( const char *pchControlPanelVersion, HmdError *peError ) = 0;
+	/** Retrieves any interface from vrclient.dll */
+	virtual void *GetGenericInterface( const char *pchNameAndVersion, HmdError *peError ) = 0;
 };
 
-static const char *IHmdSystem_Version = "IHmdSystem_001";
+static const char * const IHmdSystem_Version = "IHmdSystem_002";
 
 }

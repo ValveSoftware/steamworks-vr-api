@@ -14,19 +14,6 @@ using namespace vr;
 
 HmdError CVRClient::Init()
 {
-	// log files go in prefpath/logs
-	char *pchUserConfigPath = SDL_GetPrefPath( "", "steamvr" );
-	if( !pchUserConfigPath )
-	{
-		return HmdError_Init_UserConfigDirectoryInvalid;
-	}
-	std::string sConfigPath = pchUserConfigPath;
-	SDL_free( pchUserConfigPath );
-
-	std::string sLogDir = Path_Join( sConfigPath, "logs" );
-
-	InitLog( sLogDir.c_str(), "client" );
-
 	int nConnectAttempt = 0;
 	uint32_t unPid = ThreadGetCurrentProcessId();
 	bool bStartedServer = false;
