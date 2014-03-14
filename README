@@ -14,7 +14,7 @@ that you can open in Visual Studio 2010 to build the whole runtime. Run the
 same command on Linux or OSX to build the projects for those platforms.
 
 To use games on Steam with your locally built copy of the VR runtime set
-the environment variable VR_OVERIDE to the absolute path to the
+the environment variable VR_OVERRIDE to the absolute path to the
 public/runtime directory on your local filesystem and restart Steam. At that
 point all Steamworks VR games launched from steam will load your copy of 
 vrclient.dll instead of the one that is updated by Steam. Unset the 
