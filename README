@@ -11,7 +11,9 @@ shipped in a Steamworks SDK release.
 To build the code open a command prompt to the src directory and run
 "devtools\bin\vpc +everything /mksln steamvr". That will create steamvr.sln
 that you can open in Visual Studio 2010 to build the whole runtime. Run the
-same command on Linux or OSX to build the projects for those platforms. VPC will have difficulty if the path to your source directory has spaces in it, so you should put the source in a path with no spaces.
+same command on Linux or OSX to build the projects for those platforms. VPC
+will have difficulty if the path to your source directory has spaces in it,
+so you should put the source in a path with no spaces.
 
 To use games on Steam with your locally built copy of the VR runtime set
 the environment variable VR_OVERRIDE to the absolute path to the
