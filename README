@@ -1,23 +1,6 @@
-This repository contains the source code for the Steamworks VR API. It is 
-provided to ease debugging and allow experimentation with new kinds of
-hardware. LICENSE.txt contains the license under which this code is 
-available, so please read it before using any part of this repository.
+The OpenVR SDK is now available here: https://github.com/ValveSoftware/openvr
 
-WARNING: Although this repository contains a version of steamvr.h you should
-not ship compiled against that version of the interface. Backward 
-compatability is only guaranteed against versions of steamvr.h that have 
-shipped in a Steamworks SDK release.
+This repository contained an old version of the SteamVR runtime. It has been
+deleted to avoid confusion with the new SDK. If you need the old runtime code,
+it is still available in the history.
 
-To build the code open a command prompt to the src directory and run
-"devtools\bin\vpc +everything /mksln steamvr". That will create steamvr.sln
-that you can open in Visual Studio 2010 to build the whole runtime. Run the
-same command on Linux or OSX to build the projects for those platforms. VPC
-will have difficulty if the path to your source directory has spaces in it,
-so you should put the source in a path with no spaces.
-
-To use games on Steam with your locally built copy of the VR runtime set
-the environment variable VR_OVERRIDE to the absolute path to the
-public/runtime directory on your local filesystem and restart Steam. At that
-point all Steamworks VR games launched from steam will load your copy of 
-vrclient.dll instead of the one that is updated by Steam. Unset the 
-environment variable to return to using Steam's copy of the API runtime.
